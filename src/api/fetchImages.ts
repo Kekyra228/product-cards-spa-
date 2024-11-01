@@ -1,5 +1,5 @@
 export async function fetchImages() {
-  const response = await fetch("https://dog.ceo/api/breeds/image/random/10");
+  const response = await fetch("https://dog.ceo/api/breeds/image/random/8");
   if (!response.ok) {
     throw new Error("Ошибка при получении данных");
   }

@@ -4,7 +4,8 @@ import { ImageType } from "@/types/types";
 
 type ImageState = {
   images: ImageType[];
-  filteredImages: "all" | "favorites";
+  filteredImages: "all" | "favorites"; //фильтрация
+  likedImage: Record<string, boolean>; //ключ-значение для хранения лайков
   loading: boolean;
   error: string | null;
 };
@@ -12,6 +13,7 @@ type ImageState = {
 const initialState: ImageState = {
   images: [],
   filteredImages: "all",
+  likedImage: {},
   loading: false,
   error: null as string | null,
 };
@@ -33,6 +35,17 @@ const imagesSlice = createSlice({
   reducers: {
     setImages: (state, action: PayloadAction<ImageType[]>) => {
       state.images = action.payload;
+    },
+    toggleLike: (state, action: PayloadAction<string>) => {
+      const imageUrl = action.payload;
+      if (state.likedImage[imageUrl]) {
+        delete state.likedImage[imageUrl];
+      } else {
+        state.likedImage[imageUrl] = true;
+      }
+    },
+    setFilter: (state, action: PayloadAction<"all" | "favorites">) => {
+      state.filteredImages = action.payload;
     },
   },
   extraReducers(builder) {
@@ -57,6 +70,6 @@ const imagesSlice = createSlice({
       });
   },
 });
-export const { setImages } = imagesSlice.actions;
+export const { setImages, setFilter, toggleLike } = imagesSlice.actions;
 
 export const ImagesReducer = imagesSlice.reducer;

@@ -1,5 +1,6 @@
 import { ImageType } from "@/types/types";
-import Image from "next/image";
+import ProductCard from "../productCard/ProductCard";
+import styles from "./productList.module.css";
 
 type Props = {
   images: ImageType[];
@@ -7,12 +8,10 @@ type Props = {
 
 const ProductsList = ({ images }: Props) => {
   return (
-    <div>
+    <div className={styles.imagesContain}>
       {images.length === 0 ? "Продуктов не найдено" : ""}
-      {images?.map((image, index) => (
-        <div key={index}>
-          <Image src={image} alt="Dog" width={200} height={200} />
-        </div>
+      {images?.map((imageUrl, index) => (
+        <ProductCard key={index} image={imageUrl} />
       ))}
     </div>
   );
