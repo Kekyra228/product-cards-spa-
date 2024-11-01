@@ -12,7 +12,7 @@ type Props = {
 const ProductCard = ({ image }: Props) => {
   const dispatch = useAppDispatch();
 
-  const isLiked = useAppSelector((state) => state.images.likedImage[image]);
+  const isLiked = useAppSelector((state) => state.images.likedImages[image]);
 
   function handleLike() {
     dispatch(toggleLike(image));

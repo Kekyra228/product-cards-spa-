@@ -5,7 +5,7 @@ import { ImageType } from "@/types/types";
 type ImageState = {
   images: ImageType[];
   filteredImages: "all" | "favorites"; //фильтрация
-  likedImage: Record<string, boolean>; //ключ-значение для хранения лайков
+  likedImages: Record<string, boolean>; //ключ-значение для хранения лайков
   loading: boolean;
   error: string | null;
 };
@@ -13,7 +13,7 @@ type ImageState = {
 const initialState: ImageState = {
   images: [],
   filteredImages: "all",
-  likedImage: {},
+  likedImages: {},
   loading: false,
   error: null as string | null,
 };
@@ -38,10 +38,10 @@ const imagesSlice = createSlice({
     },
     toggleLike: (state, action: PayloadAction<string>) => {
       const imageUrl = action.payload;
-      if (state.likedImage[imageUrl]) {
-        delete state.likedImage[imageUrl];
+      if (state.likedImages[imageUrl]) {
+        delete state.likedImages[imageUrl];
       } else {
-        state.likedImage[imageUrl] = true;
+        state.likedImages[imageUrl] = true;
       }
     },
     setFilter: (state, action: PayloadAction<"all" | "favorites">) => {
