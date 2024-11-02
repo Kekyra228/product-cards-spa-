@@ -7,9 +7,10 @@ import { toggleLike } from "@/store/features/imagesSlice";
 
 type Props = {
   image: ImageType;
+  onRemove: () => void;
 };
 
-const ProductCard = ({ image }: Props) => {
+const ProductCard = ({ image, onRemove }: Props) => {
   const dispatch = useAppDispatch();
 
   const isLiked = useAppSelector((state) => state.images.likedImages[image]);
@@ -30,6 +31,9 @@ const ProductCard = ({ image }: Props) => {
       <span className={styles.likeBtn} onClick={handleLike}>
         {" "}
         {isLiked ? "❤️" : "🤍"}
+      </span>
+      <span className={styles.deleteBtn} onClick={onRemove}>
+        🗑️
       </span>
     </div>
   );

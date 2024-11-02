@@ -47,6 +47,12 @@ const imagesSlice = createSlice({
     setFilter: (state, action: PayloadAction<"all" | "favorites">) => {
       state.filteredImages = action.payload;
     },
+    deleteImage: (state, action: PayloadAction<string>) => {
+      state.images = state.images.filter((img) => img !== action.payload);
+      // обновленный массив, содержащий все изображения, кроме того, URL которого совпадает с action.payload
+      delete state.likedImages[action.payload];
+      //так же удаляем из лайкнутых
+    },
   },
   extraReducers(builder) {
     builder
@@ -70,6 +76,7 @@ const imagesSlice = createSlice({
       });
   },
 });
-export const { setImages, setFilter, toggleLike } = imagesSlice.actions;
+export const { setImages, setFilter, toggleLike, deleteImage } =
+  imagesSlice.actions;
 
 export const ImagesReducer = imagesSlice.reducer;

@@ -3,7 +3,7 @@ import { ImageType } from "@/types/types";
 import ProductCard from "../productCard/ProductCard";
 import styles from "./productList.module.css";
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
-import { setFilter } from "@/store/features/imagesSlice";
+import { deleteImage, setFilter } from "@/store/features/imagesSlice";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -32,6 +32,9 @@ const ProductsList = ({ images }: Props) => {
     dispatch(setFilter(chosedFilter));
   }
 
+  function handleDelete(imageUrl: string) {
+    dispatch(deleteImage(imageUrl));
+  }
   return (
     <div>
       <div className={styles.filterBtnsContain}>
@@ -51,7 +54,11 @@ const ProductsList = ({ images }: Props) => {
       <div className={styles.imagesContain}>
         {imagesInFilter.length === 0 ? "Продуктов не найдено" : ""}
         {imagesInFilter?.map((imageUrl, index) => (
-          <ProductCard key={index} image={imageUrl} />
+          <ProductCard
+            key={index}
+            image={imageUrl}
+            onRemove={() => handleDelete(imageUrl)}
+          />
         ))}
       </div>
     </div>
