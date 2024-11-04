@@ -3,6 +3,7 @@ import { fetchImages } from "@/api/fetchImages";
 import { ImageType } from "@/types/types";
 
 type ImageState = {
+  dataImages: ImageType[];
   images: ImageType[];
   filteredImages: "all" | "favorites"; //фильтрация
   likedImages: Record<string, boolean>; //ключ-значение для хранения лайков
@@ -11,6 +12,7 @@ type ImageState = {
 };
 
 const initialState: ImageState = {
+  dataImages: [],
   images: [],
   filteredImages: "all",
   likedImages: {},
@@ -25,7 +27,9 @@ export const getImages = createAsyncThunk("images/getImages", async () => {
     console.log("Данные получены:", allImages);
     return allImages;
   } catch (error) {
-    return null;
+    if (error instanceof Error) {
+      return null;
+    }
   }
 });
 
@@ -35,6 +39,7 @@ const imagesSlice = createSlice({
   reducers: {
     setImages: (state, action: PayloadAction<ImageType[]>) => {
       state.images = action.payload;
+      state.dataImages = action.payload;
     },
     toggleLike: (state, action: PayloadAction<string>) => {
       const imageUrl = action.payload;
@@ -43,9 +48,16 @@ const imagesSlice = createSlice({
       } else {
         state.likedImages[imageUrl] = true;
       }
+      // state.images = state.dataImages.filter((img) => state.likedImages[img]);
     },
+
     setFilter: (state, action: PayloadAction<"all" | "favorites">) => {
       state.filteredImages = action.payload;
+      if (action.payload === "favorites") {
+        state.images = state.dataImages.filter((img) => state.likedImages[img]);
+      } else {
+        state.images = state.dataImages;
+      }
     },
     deleteImage: (state, action: PayloadAction<string>) => {
       state.images = state.images.filter((img) => img !== action.payload);
@@ -62,11 +74,16 @@ const imagesSlice = createSlice({
       })
       .addCase(
         getImages.fulfilled,
-        (state, action: PayloadAction<ImageType[]>) => {
+        (state, action: PayloadAction<string[]>) => {
           if (!action.payload) {
             return;
           }
+          // const newImages: ImageType[] = action.payload.map((el) => ({
+          //   url: el,
+          //   isLiked: false,
+          // }));
           state.images = action.payload;
+          state.dataImages = action.payload;
           state.loading = false;
         }
       )

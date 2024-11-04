@@ -1,32 +1,39 @@
 "use client";
-import { ImageType } from "@/types/types";
+import { fetchImages } from "@/api/fetchImages";
 import ProductCard from "../productCard/ProductCard";
 import styles from "./productList.module.css";
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
-import { deleteImage, setFilter } from "@/store/features/imagesSlice";
-import { useEffect, useState } from "react";
+import {
+  deleteImage,
+  setFilter,
+  setImages,
+} from "@/store/features/imagesSlice";
 
-type Props = {
-  images: ImageType[];
-};
-
-const ProductsList = ({ images }: Props) => {
+const ProductsList = () => {
   const dispatch = useAppDispatch();
-  const likedImages = useAppSelector((state) => state.images.likedImages);
-  const filterImages = useAppSelector((state) => state.images.filteredImages);
 
-  const [imagesInFilter, setImagesInFilter] = useState<ImageType[]>([]);
-  useEffect(() => {
-    if (filterImages === "favorites") {
-      setImagesInFilter(
-        images?.filter((image: ImageType) => likedImages[image])
-      );
-      console.log("выбраны избранные");
-    } else {
-      setImagesInFilter(images);
-      console.log("выбраны все");
-    }
-  }, [filterImages, images, likedImages]);
+  const { images: imagesInFilter, filteredImages } = useAppSelector(
+    (state) => state.images
+  );
+
+  // const [imagesInFilter, setImagesInFilter] = useState<ImageType[]>([]);
+  // useEffect(() => {
+  //   if (filteredImages === "favorites") {
+  //     dispatch(
+  //       setImages(images?.filter((image: ImageType) => likedImages[image]))
+  //     );
+  //     console.log("выбраны избранные");
+  //   } else {
+  //     dispatch(setImages(images));
+  //     console.log("выбраны все");
+  //   }
+  // }, [filteredImages, images, likedImages, dispatch]);
+
+  function onClickMore() {
+    fetchImages().then((res) => {
+      dispatch(setImages([...imagesInFilter, ...res]));
+    });
+  }
 
   function handleFilter(chosedFilter: "all" | "favorites") {
     dispatch(setFilter(chosedFilter));
@@ -61,6 +68,9 @@ const ProductsList = ({ images }: Props) => {
           />
         ))}
       </div>
+      {filteredImages !== "favorites" && (
+        <button onClick={onClickMore}>Показать еще</button>
+      )}
     </div>
   );
 };
