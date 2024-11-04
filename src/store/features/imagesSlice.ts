@@ -22,9 +22,8 @@ const initialState: ImageState = {
 
 export const getImages = createAsyncThunk("images/getImages", async () => {
   try {
-    console.log("Отправка запроса к API");
     const allImages = await fetchImages();
-    console.log("Данные получены:", allImages);
+    console.log(allImages);
     return allImages;
   } catch (error) {
     if (error instanceof Error) {
@@ -54,13 +53,16 @@ const imagesSlice = createSlice({
     setFilter: (state, action: PayloadAction<"all" | "favorites">) => {
       state.filteredImages = action.payload;
       if (action.payload === "favorites") {
-        state.images = state.dataImages.filter((img) => state.likedImages[img]);
+        state.images = state.dataImages.filter(
+          (img) => state.likedImages[img.id]
+        );
       } else {
         state.images = state.dataImages;
       }
     },
     deleteImage: (state, action: PayloadAction<string>) => {
-      state.images = state.images.filter((img) => img !== action.payload);
+      const imageId = action.payload;
+      state.images = state.images.filter((img) => img.id !== imageId);
       // обновленный массив, содержащий все изображения, кроме того, URL которого совпадает с action.payload
       delete state.likedImages[action.payload];
       //так же удаляем из лайкнутых
@@ -74,14 +76,11 @@ const imagesSlice = createSlice({
       })
       .addCase(
         getImages.fulfilled,
-        (state, action: PayloadAction<string[]>) => {
+        (state, action: PayloadAction<ImageType[]>) => {
           if (!action.payload) {
             return;
           }
-          // const newImages: ImageType[] = action.payload.map((el) => ({
-          //   url: el,
-          //   isLiked: false,
-          // }));
+
           state.images = action.payload;
           state.dataImages = action.payload;
           state.loading = false;

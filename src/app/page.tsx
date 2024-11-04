@@ -7,7 +7,6 @@ import styles from "./page.module.css";
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
-  // const allImages: ImageType[] = useAppSelector((state) => state.images.images);
   const isLoading = useAppSelector((state) => state.images.loading);
 
   useEffect(() => {

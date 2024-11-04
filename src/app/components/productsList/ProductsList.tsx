@@ -16,19 +16,6 @@ const ProductsList = () => {
     (state) => state.images
   );
 
-  // const [imagesInFilter, setImagesInFilter] = useState<ImageType[]>([]);
-  // useEffect(() => {
-  //   if (filteredImages === "favorites") {
-  //     dispatch(
-  //       setImages(images?.filter((image: ImageType) => likedImages[image]))
-  //     );
-  //     console.log("выбраны избранные");
-  //   } else {
-  //     dispatch(setImages(images));
-  //     console.log("выбраны все");
-  //   }
-  // }, [filteredImages, images, likedImages, dispatch]);
-
   function onClickMore() {
     fetchImages().then((res) => {
       dispatch(setImages([...imagesInFilter, ...res]));
@@ -60,11 +47,11 @@ const ProductsList = () => {
       </div>
       <div className={styles.imagesContain}>
         {imagesInFilter.length === 0 ? "Продуктов не найдено" : ""}
-        {imagesInFilter?.map((imageUrl, index) => (
+        {imagesInFilter?.map((imageUrl) => (
           <ProductCard
-            key={index}
+            key={imageUrl.id}
             image={imageUrl}
-            onRemove={() => handleDelete(imageUrl)}
+            onRemove={() => handleDelete(imageUrl.url)}
           />
         ))}
       </div>
