@@ -16,28 +16,33 @@ const ProductCard = ({ image, onRemove }: Props) => {
 
   const isLiked = useAppSelector((state) => state.images.likedImages[image.id]);
 
-  function handleLike() {
+  function handleLike(event: React.MouseEvent) {
+    event.stopPropagation();
     dispatch(toggleLike(image.id));
   }
-  console.log(image);
+  function handleDelete(event: React.MouseEvent) {
+    event.stopPropagation(); // Останавливаем всплытие события
+    onRemove();
+  }
+
   return (
     <div className={styles.imageCard}>
-      {/* <Link href={`/cards/${encodeURIComponent(image.url)}`} prefetch={false}> */}
-      <Image
-        src={image.url}
-        alt={image.name}
-        width={280}
-        height={280}
-        className={styles.image}
-      />
-      <span className={styles.likeBtn} onClick={handleLike}>
-        {" "}
-        {isLiked ? "❤️" : "🤍"}
-      </span>
-      <span className={styles.deleteBtn} onClick={onRemove}>
-        🗑️
-      </span>
-      {/* </Link> */}
+      <Link href={`/cards/${encodeURIComponent(image.id)}`} prefetch={false}>
+        <Image
+          src={image.url}
+          alt="Dog"
+          width={280}
+          height={280}
+          className={styles.image}
+        />
+        <span className={styles.likeBtn} onClick={handleLike}>
+          {" "}
+          {isLiked ? "❤️" : "🤍"}
+        </span>
+        <span className={styles.deleteBtn} onClick={handleDelete}>
+          🗑️
+        </span>
+      </Link>
     </div>
   );
 };

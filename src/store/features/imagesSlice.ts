@@ -23,7 +23,6 @@ const initialState: ImageState = {
 export const getImages = createAsyncThunk("images/getImages", async () => {
   try {
     const allImages = await fetchImages();
-    console.log(allImages);
     return allImages;
   } catch (error) {
     if (error instanceof Error) {
@@ -47,9 +46,12 @@ const imagesSlice = createSlice({
       } else {
         state.likedImages[imageUrl] = true;
       }
-      // state.images = state.dataImages.filter((img) => state.likedImages[img]);
     },
-
+    deleteImage: (state, action: PayloadAction<string>) => {
+      const imageId = action.payload;
+      state.images = state.images.filter((img) => img.id !== imageId);
+      delete state.likedImages[imageId];
+    },
     setFilter: (state, action: PayloadAction<"all" | "favorites">) => {
       state.filteredImages = action.payload;
       if (action.payload === "favorites") {
@@ -59,13 +61,6 @@ const imagesSlice = createSlice({
       } else {
         state.images = state.dataImages;
       }
-    },
-    deleteImage: (state, action: PayloadAction<string>) => {
-      const imageId = action.payload;
-      state.images = state.images.filter((img) => img.id !== imageId);
-      // обновленный массив, содержащий все изображения, кроме того, URL которого совпадает с action.payload
-      delete state.likedImages[action.payload];
-      //так же удаляем из лайкнутых
     },
   },
   extraReducers(builder) {

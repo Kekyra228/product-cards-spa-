@@ -26,8 +26,8 @@ const ProductsList = () => {
     dispatch(setFilter(chosedFilter));
   }
 
-  function handleDelete(imageUrl: string) {
-    dispatch(deleteImage(imageUrl));
+  function handleDelete(imageId: string) {
+    dispatch(deleteImage(imageId));
   }
   return (
     <div>
@@ -47,11 +47,11 @@ const ProductsList = () => {
       </div>
       <div className={styles.imagesContain}>
         {imagesInFilter.length === 0 ? "Продуктов не найдено" : ""}
-        {imagesInFilter?.map((imageUrl) => (
+        {imagesInFilter?.map((image) => (
           <ProductCard
-            key={imageUrl.id}
-            image={imageUrl}
-            onRemove={() => handleDelete(imageUrl.url)}
+            key={image.id}
+            image={image}
+            onRemove={() => handleDelete(image.id)}
           />
         ))}
       </div>

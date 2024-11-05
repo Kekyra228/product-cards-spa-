@@ -1,6 +1,6 @@
 export async function fetchImages() {
   const response = await fetch(
-    "https://api.thedogapi.com/v1/images/search?limit=10",
+    "https://api.thedogapi.com/v1/images/search?limit=8",
     {
       headers: {
         "x-api-key":
