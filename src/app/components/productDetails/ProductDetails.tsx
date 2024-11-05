@@ -28,19 +28,31 @@ const ProductDetails = () => {
   if (!decodedId || !card) return <p>Загрузка...</p>;
 
   const breedInfo: BreedType = card?.breeds?.[0] || {
-    name: "Без названия",
-    temperament: "Нет данных",
-    life_span: "Нет данных",
+    name: "No data",
+    temperament: "No",
+    life_span: "No",
   };
 
   return (
     <div className={styles.productDetail}>
-      <h1>Детальная информация о продукте {breedInfo.name}</h1>
-      <p>Темперамент: {breedInfo.temperament}</p>
-      <p>Продолжительность жизни: {breedInfo.life_span}</p>
-      <Image src={card.url} alt="Dog" width={280} height={280} />
+      <h1 className={styles.title}>Info about {breedInfo.name}</h1>
+      <div className={styles.content}>
+        <div className={styles.info}>
+          <p>Temperament: {breedInfo.temperament}</p>
+          <p>Life expectancyи: {breedInfo.life_span}</p>
+        </div>
+
+        <Image
+          src={card.url}
+          alt={breedInfo.name}
+          width={280}
+          height={280}
+          className={styles.image}
+        />
+      </div>
+
       <Link href="/">
-        <button>Назад на главную</button>
+        <button className={styles.backButton}>Back</button>
       </Link>
     </div>
   );

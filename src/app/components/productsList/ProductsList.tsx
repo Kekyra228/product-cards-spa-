@@ -36,13 +36,13 @@ const ProductsList = () => {
           className={styles.filterBtn}
           onClick={() => handleFilter("favorites")}
         >
-          Показать избранное
+          Show favorites
         </button>
         <button
           className={styles.filterBtn}
           onClick={() => handleFilter("all")}
         >
-          Показать все
+          Show all
         </button>
       </div>
       <div className={styles.imagesContain}>
@@ -56,7 +56,7 @@ const ProductsList = () => {
         ))}
       </div>
       {filteredImages !== "favorites" && (
-        <button onClick={onClickMore}>Показать еще</button>
+        <button onClick={onClickMore}>Show more</button>
       )}
     </div>
   );
