@@ -17,11 +17,13 @@ const ProductCard = ({ image, onRemove }: Props) => {
   const isLiked = useAppSelector((state) => state.images.likedImages[image.id]);
 
   function handleLike(event: React.MouseEvent) {
+    event.preventDefault();
     event.stopPropagation();
     dispatch(toggleLike(image.id));
   }
   function handleDelete(event: React.MouseEvent) {
-    event.stopPropagation(); // Останавливаем всплытие события
+    event.preventDefault();
+    event.stopPropagation();
     onRemove();
   }
 

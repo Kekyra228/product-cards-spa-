@@ -1,21 +1,26 @@
 "use client";
-import React, { useEffect } from "react";
+
 import { useAppDispatch, useAppSelector } from "@/hooks/store";
-import { getImages } from "@/store/features/imagesSlice";
+
 import ProductsList from "./components/productsList/ProductsList";
 import styles from "./page.module.css";
+import { useEffect } from "react";
+import { getImages } from "@/store/features/imagesSlice";
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((state) => state.images.loading);
+  const dataImages = useAppSelector((state) => state.images.dataImages);
 
   useEffect(() => {
-    dispatch(getImages());
-  }, [dispatch]);
+    if (dataImages.length === 0) {
+      dispatch(getImages());
+    }
+  }, [dispatch, dataImages.length]);
 
   return (
     <div className={styles.wrapper}>
-      {isLoading ? <p>Загрузка...</p> : <ProductsList />}
+      {isLoading ? <p>Loading...</p> : <ProductsList />}
     </div>
   );
 }

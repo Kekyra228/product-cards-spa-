@@ -23,9 +23,8 @@ const ProductDetails = () => {
   const card = useAppSelector((state) =>
     state.images.images.find((img) => img.id === id)
   );
-  console.log("Найденная карточка:", card);
 
-  if (!decodedId || !card) return <p>Загрузка...</p>;
+  if (!decodedId || !card) return <p>Loading...</p>;
 
   const breedInfo: BreedType = card?.breeds?.[0] || {
     name: "No data",
@@ -39,7 +38,7 @@ const ProductDetails = () => {
       <div className={styles.content}>
         <div className={styles.info}>
           <p>Temperament: {breedInfo.temperament}</p>
-          <p>Life expectancyи: {breedInfo.life_span}</p>
+          <p>Life expectancy: {breedInfo.life_span}</p>
         </div>
 
         <Image

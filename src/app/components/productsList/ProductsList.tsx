@@ -1,4 +1,3 @@
-"use client";
 import { fetchImages } from "@/api/fetchImages";
 import ProductCard from "../productCard/ProductCard";
 import styles from "./productList.module.css";
@@ -8,6 +7,7 @@ import {
   setFilter,
   setImages,
 } from "@/store/features/imagesSlice";
+import Link from "next/link";
 
 const ProductsList = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +15,6 @@ const ProductsList = () => {
   const { images: imagesInFilter, filteredImages } = useAppSelector(
     (state) => state.images
   );
-
   function onClickMore() {
     fetchImages().then((res) => {
       dispatch(setImages([...imagesInFilter, ...res]));
@@ -55,9 +54,18 @@ const ProductsList = () => {
           />
         ))}
       </div>
-      {filteredImages !== "favorites" && (
-        <button onClick={onClickMore}>Show more</button>
-      )}
+      <div className={styles.buttonsWrapper}>
+        {filteredImages !== "favorites" && (
+          <button className={styles.button} onClick={onClickMore}>
+            Show more
+          </button>
+        )}
+        <div>
+          <Link href="/create-product">
+            <button className={styles.button}>Create product</button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
