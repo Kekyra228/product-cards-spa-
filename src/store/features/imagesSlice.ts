@@ -16,6 +16,7 @@ type ImageState = {
   images: ImageType[];
   filteredImages: "all" | "favorites";
   likedImages: Record<string, boolean>;
+  searchString: string;
   loading: boolean;
   error: string | null;
 };
@@ -25,6 +26,7 @@ const initialState: ImageState = {
   images: [],
   filteredImages: "all",
   likedImages: loadLikesFromLocalStorage(),
+  searchString: "",
   loading: false,
   error: null as string | null,
 };
@@ -56,6 +58,13 @@ const imagesSlice = createSlice({
         state.likedImages[imageUrl] = true;
       }
       saveLikesToLocalStorage(state.likedImages);
+      if (state.filteredImages === "favorites") {
+        state.images = state.dataImages.filter(
+          (img) => state.likedImages[img.id]
+        );
+      } else {
+        state.images = state.dataImages;
+      }
     },
     deleteImage: (state, action: PayloadAction<string>) => {
       const imageId = action.payload;
@@ -75,6 +84,20 @@ const imagesSlice = createSlice({
     addCard: (state, action: PayloadAction<ImageType>) => {
       state.images = [...state.images, action.payload];
       state.dataImages = [...state.dataImages, action.payload];
+    },
+    setSearchString: (state, action: PayloadAction<string>) => {
+      state.searchString = action.payload;
+      if (state.searchString === "") {
+        state.images = [...state.dataImages];
+      } else {
+        state.images = state.dataImages.filter((img) =>
+          img.breeds.some((breed) =>
+            breed.name
+              .toLocaleLowerCase()
+              .includes(state.searchString.toLocaleLowerCase())
+          )
+        );
+      }
     },
   },
   extraReducers(builder) {
@@ -101,7 +124,13 @@ const imagesSlice = createSlice({
       });
   },
 });
-export const { setImages, setFilter, toggleLike, deleteImage, addCard } =
-  imagesSlice.actions;
+export const {
+  setImages,
+  setFilter,
+  toggleLike,
+  deleteImage,
+  addCard,
+  setSearchString,
+} = imagesSlice.actions;
 
 export const ImagesReducer = imagesSlice.reducer;

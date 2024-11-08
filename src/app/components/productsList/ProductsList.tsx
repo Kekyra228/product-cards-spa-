@@ -1,3 +1,4 @@
+"use client";
 import { fetchImages } from "@/api/fetchImages";
 import ProductCard from "../productCard/ProductCard";
 import styles from "./productList.module.css";
@@ -8,13 +9,26 @@ import {
   setImages,
 } from "@/store/features/imagesSlice";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const ProductsList = () => {
   const dispatch = useAppDispatch();
 
-  const { images: imagesInFilter, filteredImages } = useAppSelector(
-    (state) => state.images
-  );
+  const {
+    likedImages,
+    dataImages,
+    images: imagesInFilter,
+    filteredImages,
+  } = useAppSelector((state) => state.images);
+
+  useEffect(() => {
+    if (filteredImages === "favorites") {
+      dispatch(setFilter("favorites"));
+    } else {
+      dispatch(setFilter("all"));
+    }
+  }, [dispatch, filteredImages, likedImages, dataImages]);
+
   function onClickMore() {
     fetchImages().then((res) => {
       dispatch(setImages([...imagesInFilter, ...res]));
