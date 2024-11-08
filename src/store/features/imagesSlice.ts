@@ -10,6 +10,14 @@ const loadLikesFromLocalStorage = (): Record<string, boolean> => {
   const savedLikes = localStorage.getItem("likedImages");
   return savedLikes ? JSON.parse(savedLikes) : {};
 };
+const saveFilterToLocalStorage = (filter: string) => {
+  localStorage.setItem("filteredImages", filter);
+};
+
+const loadFilterFromLocalStorage = (): "all" | "favorites" => {
+  const savedFilter = localStorage.getItem("filteredImages");
+  return savedFilter === "favorites" ? "favorites" : "all";
+};
 
 type ImageState = {
   dataImages: ImageType[];
@@ -24,7 +32,7 @@ type ImageState = {
 const initialState: ImageState = {
   dataImages: [],
   images: [],
-  filteredImages: "all",
+  filteredImages: loadFilterFromLocalStorage(),
   likedImages: loadLikesFromLocalStorage(),
   searchString: "",
   loading: false,
@@ -49,6 +57,24 @@ const imagesSlice = createSlice({
     setImages: (state, action: PayloadAction<ImageType[]>) => {
       state.images = action.payload;
       state.dataImages = action.payload;
+      if (state.filteredImages === "favorites") {
+        state.images = state.dataImages.filter(
+          (img) => state.likedImages[img.id]
+        );
+      } else {
+        state.images = [...state.dataImages];
+      }
+    },
+    setFilter: (state, action: PayloadAction<"all" | "favorites">) => {
+      state.filteredImages = action.payload;
+      saveFilterToLocalStorage(action.payload);
+      if (action.payload === "favorites") {
+        state.images = state.dataImages.filter(
+          (img) => state.likedImages[img.id]
+        );
+      } else {
+        state.images = state.dataImages;
+      }
     },
     toggleLike: (state, action: PayloadAction<string>) => {
       const imageUrl = action.payload;
@@ -71,16 +97,7 @@ const imagesSlice = createSlice({
       state.images = state.images.filter((img) => img.id !== imageId);
       delete state.likedImages[imageId];
     },
-    setFilter: (state, action: PayloadAction<"all" | "favorites">) => {
-      state.filteredImages = action.payload;
-      if (action.payload === "favorites") {
-        state.images = state.dataImages.filter(
-          (img) => state.likedImages[img.id]
-        );
-      } else {
-        state.images = state.dataImages;
-      }
-    },
+
     addCard: (state, action: PayloadAction<ImageType>) => {
       state.images = [...state.images, action.payload];
       state.dataImages = [...state.dataImages, action.payload];

@@ -59,7 +59,7 @@ const ProductsList = () => {
         </button>
       </div>
       <div className={styles.imagesContain}>
-        {imagesInFilter.length === 0 ? "Продуктов не найдено" : ""}
+        {imagesInFilter.length === 0 ? "Not found" : ""}
         {imagesInFilter?.map((image) => (
           <ProductCard
             key={image.id}
