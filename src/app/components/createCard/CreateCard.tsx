@@ -15,9 +15,32 @@ const CreateCard = () => {
     temperament: "",
     life_span: "",
   });
+  const [errors, setErrors] = useState({
+    name: "",
+    temperament: "",
+    life_span: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const textOnly = /^[A-Za-zА-Яа-я\s]*$/;
+    if ((name === "name" || name === "temperament") && !textOnly.test(value)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "Only letters are allowed",
+      }));
+    } else if (value.trim() === "") {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "This field is required",
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "",
+      }));
+    }
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -26,6 +49,17 @@ const CreateCard = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (
+      formData.name.trim() === "" ||
+      formData.temperament.trim() === "" ||
+      formData.life_span.trim() === "" ||
+      errors.name ||
+      errors.temperament ||
+      errors.life_span
+    ) {
+      return;
+    }
+
     dispatch(
       addCard({
         id: Date.now().toString(),
@@ -53,7 +87,7 @@ const CreateCard = () => {
             className={styles.input}
           />
         </label>
-
+        {errors.name && <p style={{ color: "red" }}>{errors.name}</p>}
         <label className={styles.label}>
           Temperament:
           <input
@@ -65,6 +99,9 @@ const CreateCard = () => {
             className={styles.input}
           />
         </label>
+        {errors.temperament && (
+          <p style={{ color: "red" }}>{errors.temperament}</p>
+        )}
 
         <label className={styles.label}>
           Life expectancy:
@@ -77,6 +114,7 @@ const CreateCard = () => {
             className={styles.input}
           />
         </label>
+        {errors.life_span && <p style={{ color: "red" }}>{errors.life_span}</p>}
 
         <button type="submit" className={styles.submitButton}>
           Add card
