@@ -44,20 +44,26 @@ const ProductsList = () => {
   }
   return (
     <div>
-      <div className={styles.filterBtnsContain}>
-        <button
-          className={styles.filterBtn}
-          onClick={() => handleFilter("favorites")}
-        >
-          Show favorites
-        </button>
-        <button
-          className={styles.filterBtn}
-          onClick={() => handleFilter("all")}
-        >
-          Show all
-        </button>
+      <div className={styles.headerContainer}>
+        <div className={styles.filterBtnsContain}>
+          <button
+            className={styles.filterBtn}
+            onClick={() => handleFilter("favorites")}
+          >
+            Show favorites
+          </button>
+          <button
+            className={styles.filterBtn}
+            onClick={() => handleFilter("all")}
+          >
+            Show all
+          </button>
+        </div>
+        <Link href="/create-product">
+          <button className={styles.createButton}>Create product</button>
+        </Link>
       </div>
+
       <div className={styles.imagesContain}>
         {imagesInFilter.length === 0 ? "Not found" : ""}
         {imagesInFilter?.map((image) => (
@@ -74,11 +80,6 @@ const ProductsList = () => {
             Show more
           </button>
         )}
-        <div>
-          <Link href="/create-product">
-            <button className={styles.button}>Create product</button>
-          </Link>
-        </div>
       </div>
     </div>
   );
