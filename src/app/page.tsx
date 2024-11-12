@@ -6,7 +6,6 @@ import ProductsList from "./components/productsList/ProductsList";
 import styles from "./page.module.css";
 import { useEffect } from "react";
 import { getImages } from "@/store/features/imagesSlice";
-import SearchBar from "./components/search/SearchBar";
 
 export default function HomePage() {
   const dispatch = useAppDispatch();
@@ -21,7 +20,6 @@ export default function HomePage() {
 
   return (
     <div className={styles.wrapper}>
-      <SearchBar />
       {isLoading ? <p>Loading...</p> : <ProductsList />}
     </div>
   );

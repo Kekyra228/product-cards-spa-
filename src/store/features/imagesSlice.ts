@@ -1,30 +1,19 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { fetchImages } from "@/api/fetchImages";
 import { ImageType } from "@/types/types";
-
-const saveLikesToLocalStorage = (likedImages: Record<string, boolean>) => {
-  localStorage.setItem("likedImages", JSON.stringify(likedImages));
-};
-
-const loadLikesFromLocalStorage = (): Record<string, boolean> => {
-  const savedLikes = localStorage.getItem("likedImages");
-  return savedLikes ? JSON.parse(savedLikes) : {};
-};
-const saveFilterToLocalStorage = (filter: string) => {
-  localStorage.setItem("filteredImages", filter);
-};
-
-const loadFilterFromLocalStorage = (): "all" | "favorites" => {
-  const savedFilter = localStorage.getItem("filteredImages");
-  return savedFilter === "favorites" ? "favorites" : "all";
-};
+import {
+  loadFilterFromLocalStorage,
+  loadLikesFromLocalStorage,
+  saveFilterToLocalStorage,
+  saveLikesToLocalStorage,
+} from "@/utils/localeStorage";
 
 type ImageState = {
   dataImages: ImageType[];
   images: ImageType[];
   filteredImages: "all" | "favorites";
   likedImages: Record<string, boolean>;
-  searchString: string;
+  // searchString: string;
   loading: boolean;
   error: string | null;
 };
@@ -34,7 +23,7 @@ const initialState: ImageState = {
   images: [],
   filteredImages: loadFilterFromLocalStorage(),
   likedImages: loadLikesFromLocalStorage(),
-  searchString: "",
+  // searchString: "",
   loading: false,
   error: null as string | null,
 };
@@ -102,20 +91,20 @@ const imagesSlice = createSlice({
       state.images = [...state.images, action.payload];
       state.dataImages = [...state.dataImages, action.payload];
     },
-    setSearchString: (state, action: PayloadAction<string>) => {
-      state.searchString = action.payload;
-      if (state.searchString === "") {
-        state.images = [...state.dataImages];
-      } else {
-        state.images = state.dataImages.filter((img) =>
-          img.breeds.some((breed) =>
-            breed.name
-              .toLocaleLowerCase()
-              .includes(state.searchString.toLocaleLowerCase())
-          )
-        );
-      }
-    },
+    // setSearchString: (state, action: PayloadAction<string>) => {
+    //   state.searchString = action.payload;
+    //   if (state.searchString === "") {
+    //     state.images = [...state.dataImages];
+    //   } else {
+    //     state.images = state.dataImages.filter((img) =>
+    //       img.breeds.some((breed) =>
+    //         breed.name
+    //           .toLocaleLowerCase()
+    //           .includes(state.searchString.toLocaleLowerCase())
+    //       )
+    //     );
+    //   }
+    // },
   },
   extraReducers(builder) {
     builder
@@ -141,13 +130,7 @@ const imagesSlice = createSlice({
       });
   },
 });
-export const {
-  setImages,
-  setFilter,
-  toggleLike,
-  deleteImage,
-  addCard,
-  setSearchString,
-} = imagesSlice.actions;
+export const { setImages, setFilter, toggleLike, deleteImage, addCard } =
+  imagesSlice.actions;
 
 export const ImagesReducer = imagesSlice.reducer;

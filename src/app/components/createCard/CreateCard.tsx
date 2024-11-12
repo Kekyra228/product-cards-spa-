@@ -29,17 +29,21 @@ const CreateCard = () => {
         ...prevErrors,
         [name]: "Only letters are allowed",
       }));
-    } else if (value.trim() === "") {
+      return;
+    }
+
+    if (!value.trim()) {
       setErrors((prevErrors) => ({
         ...prevErrors,
         [name]: "This field is required",
       }));
-    } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: "",
-      }));
+      return;
     }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
 
     setFormData((prevData) => ({
       ...prevData,
@@ -49,17 +53,6 @@ const CreateCard = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      formData.name.trim() === "" ||
-      formData.temperament.trim() === "" ||
-      formData.life_span.trim() === "" ||
-      errors.name ||
-      errors.temperament ||
-      errors.life_span
-    ) {
-      return;
-    }
-
     dispatch(
       addCard({
         id: Date.now().toString(),
@@ -70,7 +63,7 @@ const CreateCard = () => {
     setIsAdded(true);
     setTimeout(() => {
       router.push("/");
-    }, 2000);
+    }, 1000); //перенаправление на главную страницу
   };
 
   return (
